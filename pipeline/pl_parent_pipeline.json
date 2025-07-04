@@ -1,0 +1,103 @@
+{
+	"name": "pl_parent_pipeline",
+	"properties": {
+		"activities": [
+			{
+				"name": "load csv to sql",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pl_generic",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "merge 3 sql table to csv",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "load csv to sql",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "PL_MergeThreeTablesPipeline",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
+				}
+			},
+			{
+				"name": "email activity on failure",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "load csv to sql",
+						"dependencyConditions": [
+							"Failed"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/json"
+					},
+					"url": "https://prod-04.northcentralus.logic.azure.com:443/workflows/66c3856928f344a494b44a0870b03197/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=tE2TnROpUFvbhNc2CctZOcecfvdZU22Dwyg9-u81J-0"
+				}
+			},
+			{
+				"name": "email activity on success",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "merge 3 sql table to csv",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"headers": {
+						"Content-Type": "application/json"
+					},
+					"url": "https://prod-12.northcentralus.logic.azure.com:443/workflows/dc07a3c617e64b798a17a6da50e052ac/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=MCd04BRFzaqJOKQMSk_eDSJt4dDZX71yFBOtP3C9oVQ"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2025-07-03T02:15:48Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

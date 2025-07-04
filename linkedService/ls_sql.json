@@ -1,0 +1,17 @@
+{
+	"name": "ls_sql",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"server": "sqlproject07.database.windows.net",
+			"database": "dbproject07",
+			"encrypt": "mandatory",
+			"trustServerCertificate": false,
+			"authenticationType": "SQL",
+			"userName": "user",
+			"encryptedCredential": "ew0KICAiVmVyc2lvbiI6ICIyMDE3LTExLTMwIiwNCiAgIlByb3RlY3Rpb25Nb2RlIjogIktleSIsDQogICJTZWNyZXRDb250ZW50VHlwZSI6ICJQbGFpbnRleHQiLA0KICAiQ3JlZGVudGlhbElkIjogIkRBVEFGQUNUT1JZQDMwRTIyQ0NELUJBMjktNDlERi05QTcxLTcxNDMyNzM2NjQ2OV9hNTMxNjk1ZC1hMzkyLTQ1NmEtOTk4Ny1iYmVmMDFlODFlOTMiDQp9"
+		}
+	}
+}
