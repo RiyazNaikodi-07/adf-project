@@ -1,0 +1,33 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "adfproject07"
+		},
+		"AzureDataLakeStorage1_accountKey": {
+			"value": ""
+		},
+		"ls_sql_password": {
+			"value": ""
+		},
+		"AzureDataLakeStorage1_properties_typeProperties_url": {
+			"value": "https://stgproject07.dfs.core.windows.net/"
+		},
+		"ls_sql_properties_typeProperties_server": {
+			"value": "sqlproject07.database.windows.net"
+		},
+		"ls_sql_properties_typeProperties_database": {
+			"value": "dbproject07"
+		},
+		"ls_sql_properties_typeProperties_userName": {
+			"value": "user"
+		},
+		"containerUri": {
+			"value": ""
+		},
+		"containerSasToken": {
+			"value": ""
+		}
+	}
+}
