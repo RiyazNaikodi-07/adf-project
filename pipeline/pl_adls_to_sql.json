@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "copy adls to sql",
+				"name": "Copy adls to sql",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -20,10 +20,6 @@
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
-							"wildcardFileName": {
-								"value": "@pipeline().parameters.csv_name",
-								"type": "Expression"
-							},
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
@@ -48,18 +44,24 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "ds_csv_raw",
-						"type": "DatasetReference"
+						"referenceName": "ds_csv07_raw",
+						"type": "DatasetReference",
+						"parameters": {
+							"csvname": {
+								"value": "@pipeline().parameters.csvname",
+								"type": "Expression"
+							}
+						}
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "ds_table",
+						"referenceName": "SqlServerTable1",
 						"type": "DatasetReference",
 						"parameters": {
 							"schema": "dbo",
 							"table": {
-								"value": "@pipeline().parameters.table_name",
+								"value": "@pipeline().parameters.tablename",
 								"type": "Expression"
 							}
 						}
@@ -68,15 +70,15 @@
 			}
 		],
 		"parameters": {
-			"csv_name": {
-				"type": "String"
+			"csvname": {
+				"type": "string"
 			},
-			"table_name": {
-				"type": "String"
+			"tablename": {
+				"type": "string"
 			}
 		},
 		"annotations": [],
-		"lastPublishTime": "2025-06-28T02:11:04Z"
+		"lastPublishTime": "2025-07-12T02:53:22Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

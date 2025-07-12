@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "lookup",
+				"name": "Lookup1",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -17,7 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderQuery": "select * from dbo.employees",
+						"sqlReaderQuery": "select top 1 * from dbo.customer",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -37,7 +37,7 @@
 				"type": "Switch",
 				"dependsOn": [
 					{
-						"activity": "lookup",
+						"activity": "Lookup1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -46,7 +46,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"on": {
-						"value": "@activity('lookup').output.count",
+						"value": "@activity('Lookup1').output.count",
 						"type": "Expression"
 					},
 					"cases": [
@@ -87,7 +87,7 @@
 										"key": "name",
 										"value": {
 											"type": "String",
-											"content": "success"
+											"content": "sucess"
 										}
 									}
 								],
@@ -95,6 +95,22 @@
 							}
 						}
 					]
+				}
+			},
+			{
+				"name": "Execute Pipeline1",
+				"type": "ExecutePipeline",
+				"dependsOn": [],
+				"policy": {
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "pl_generic",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true
 				}
 			}
 		],
@@ -104,7 +120,7 @@
 			}
 		},
 		"annotations": [],
-		"lastPublishTime": "2025-07-01T01:54:34Z"
+		"lastPublishTime": "2025-07-08T21:17:02Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }

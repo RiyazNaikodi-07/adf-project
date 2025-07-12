@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "get csv names",
+				"name": "Get csv names",
 				"type": "GetMetadata",
 				"dependsOn": [],
 				"policy": {
@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "ds_csv_raw",
+						"referenceName": "ds_csv",
 						"type": "DatasetReference"
 					},
 					"fieldList": [
@@ -33,11 +33,11 @@
 				}
 			},
 			{
-				"name": "for each csv files to tables",
+				"name": "For each csv files to tables",
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "get csv names",
+						"activity": "Get csv names",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -46,13 +46,13 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('get csv names').output.childItems",
+						"value": "@activity('Get csv names').output.childItems",
 						"type": "Expression"
 					},
 					"isSequential": true,
 					"activities": [
 						{
-							"name": "copy csv to sql tables",
+							"name": "Copy csv to sql table",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
@@ -65,27 +65,12 @@
 							"userProperties": [],
 							"typeProperties": {
 								"source": {
-									"type": "DelimitedTextSource",
-									"storeSettings": {
-										"type": "AzureBlobFSReadSettings",
-										"recursive": false,
-										"wildcardFolderPath": "raw",
-										"wildcardFileName": {
-											"value": "@item().name",
-											"type": "Expression"
-										},
-										"enablePartitionDiscovery": false
-									},
-									"formatSettings": {
-										"type": "DelimitedTextReadSettings"
-									}
+									"type": "SqlServerSource",
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
 								},
 								"sink": {
 									"type": "SqlServerSink",
-									"preCopyScript": {
-										"value": "TRUNCATE TABLE [dbo].[@{replace(item().name, '.csv', '')}]",
-										"type": "Expression"
-									},
 									"writeBehavior": "insert",
 									"sqlWriterUseTableLock": false,
 									"tableOption": "autoCreate"
@@ -102,8 +87,15 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "ds_csv_raw",
-									"type": "DatasetReference"
+									"referenceName": "ds_table",
+									"type": "DatasetReference",
+									"parameters": {
+										"schema": "dbo",
+										"table": {
+											"value": "@item().name",
+											"type": "Expression"
+										}
+									}
 								}
 							],
 							"outputs": [
@@ -113,7 +105,7 @@
 									"parameters": {
 										"schema": "dbo",
 										"table": {
-											"value": "@replace(item().name, '.csv', '')",
+											"value": "@item().name",
 											"type": "Expression"
 										}
 									}
@@ -125,7 +117,7 @@
 			}
 		],
 		"annotations": [],
-		"lastPublishTime": "2025-07-03T02:13:11Z"
+		"lastPublishTime": "2025-07-12T02:53:22Z"
 	},
 	"type": "Microsoft.DataFactory/factories/pipelines"
 }
